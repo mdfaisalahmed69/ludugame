@@ -13,7 +13,7 @@
             background-color: #f4f4f4;
             color: #333;
             line-height: 1.6;
-            position: relative; /* Needed for absolute positioning of popup */
+            position: relative; /* Needed for absolute positioning of popups */
             min-height: 100vh; /* Ensure body takes full viewport height */
         }
         .container {
@@ -83,31 +83,6 @@
         .button:hover {
             background-color: #45a049;
         }
-        .share-buttons {
-            text-align: center;
-            margin-top: 15px;
-            display: flex; /* Make buttons align horizontally */
-            justify-content: center; /* Center them */
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-            gap: 15px; /* Space between buttons */
-        }
-        .share-buttons .share-btn { /* Specific style for share buttons */
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff; /* Blue for example */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-        .share-buttons .share-btn.facebook { background-color: #3b5998; }
-        .share-buttons .share-btn.whatsapp { background-color: #25D366; }
-        .share-buttons .share-btn.telegram { background-color: #0088cc; }
-
-        .share-buttons .share-btn:hover {
-            opacity: 0.9;
-        }
 
         .review {
             background-color: #e9e9e9;
@@ -124,7 +99,7 @@
             color: #555;
         }
 
-        /* Styles for the Notification Pop-up */
+        /* Styles for ALL Notification Pop-ups */
         .notification-overlay {
             position: fixed;
             top: 0;
@@ -173,9 +148,55 @@
             font-size: 1em;
             font-weight: bold;
             transition: background-color 0.3s ease;
+            margin: 5px; /* Added margin for potential multiple buttons if needed */
         }
         .notification-close-btn:hover {
             background-color: #45a049;
+        }
+        /* Style for share buttons within the pop-up */
+        .popup-share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Space between share buttons */
+            margin-top: 20px;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+        .popup-share-buttons .share-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            font-size: 0.9em; /* Smaller font for pop-up buttons */
+        }
+        .popup-share-buttons .share-btn.facebook { background-color: #3b5998; }
+        .popup-share-buttons .share-btn.whatsapp { background-color: #25D366; }
+        .popup-share-buttons .share-btn.telegram { background-color: #0088cc; }
+        .popup-share-buttons .share-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Small sticky notification */
+        .sticky-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745; /* Green for success */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+            font-size: 0.9em;
+        }
+        .sticky-notification.show {
+            opacity: 1;
+            visibility: visible;
         }
     </style>
 </head>
@@ -211,14 +232,9 @@
         </section>
 
         <section class="section">
-            <a href="https://www.profitableratecpm.com/twnuj3swn8?key=77208b8b129dc101a09960c73e246586" target="_blank" class="button">খেলা শুরু করুন</a>
+            <a href="#" onclick="showShareRequirementPopup(event)" class="button">খেলা শুরু করুন</a>
             <p style="text-align: center; font-weight: bold; margin-top: 15px;">বন্ধুদের সাথে শেয়ার করে আরও বেশি টাকা ইনকাম করুন!</p>
-            <div class="share-buttons">
-                <a href="https://www.facebook.com/sharer/sharer.php?u=https://ludugame.vercel.app/" target="_blank" class="share-btn facebook">ফেসবুক</a>
-                <a href="https://api.whatsapp.com/send?text=%E0%A6%B2%E0%A7%81%E0%A6%A1%E0%A7%81%20%E0%A6%96%E0%A7%87%E0%A6%B2%E0%A7%87%20%E0%A6%9F%E0%A6%BE%E0%A6%95%E0%A6%BE%20%E0%A6%87%E0%A6%A8%E0%A6%95%E0%A6%BE%E0%A6%AE%20%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8!%20%E0%A6%86%E0%A6%9C%E0%A6%87%20%E0%A6%B6%E0%A7%81%E0%A6%B0%E0%A7%81%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8:%20https://ludugame.vercel.app/" target="_blank" class="share-btn whatsapp">হোয়াটসঅ্যাপ</a>
-                <a href="https://t.me/share/url?url=https://ludugame.vercel.app/&text=%E0%A6%B2%E0%A7%81%E0%A6%A1%E0%A7%81%20%E0%A6%96%E0%A7%87%E0%A6%B2%E0%A7%87%20%E0%A6%9F%E0%A6%BE%E0%A6%95%E0%A6%BE%20%E0%A6%87%E0%A6%A8%E0%A6%95%E0%A6%BE%E0%A6%AE%20%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8!" target="_blank" class="share-btn telegram">টেলিগ্রাম</a>
-            </div>
-        </section>
+            </section>
 
         <section class="section">
             <h2>🏆 আমাদের ইউজারদের সফলতার গল্প</h2>
@@ -247,7 +263,7 @@
                 <strong>- নুসরাত জাহান</strong>
             </div>
             <div class="review">
-                <p>"সেরা লুডু ইনকাম প্ল্যাটফর্ম! আমি বন্ধুদেরও রেফার করেছি, বোনাসও পেয়েছি।"</p>
+                <p>"সেরা লুডু ইনকাম প্ল্যাটফর্ম! আমি বন্ধুদেরও রেফার করেছি, বোনাসও পেয়েছি."</p>
                 <strong>- তানভীর আহমেদ</strong>
             </div>
             <div class="review">
@@ -273,27 +289,63 @@
         <div class="notification-box">
             <h3>অভিনন্দন!</h3>
             <p>আপনি সাইট ভিজিট করার জন্য <strong>৫০০ টাকা বোনাস</strong> পেয়েছেন!</p>
-            <button class="notification-close-btn" onclick="redirectAndCloseNotification()">ঠিক আছে</button>
+            <button class="notification-close-btn" onclick="closeBonusNotificationAndShowSticky()">ঠিক আছে</button>
         </div>
+    </div>
+
+    <div id="shareRequirementPopup" class="notification-overlay">
+        <div class="notification-box">
+            <h3>গুরুত্বপূর্ণ!</h3>
+            <p>খেলা শুরু করার আগে, অনুগ্রহ করে <strong>১০ জন বন্ধুকে</strong> এই সাইটটি শেয়ার করুন।</p>
+            <p style="font-weight: bold; color: #FF5722;">শেয়ার করার পরেই আপনি খেলা শুরু করতে এবং টাকা উত্তোলন করতে পারবেন।</p>
+            <div class="popup-share-buttons">
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://ludugame.vercel.app/" target="_blank" class="share-btn facebook">ফেসবুক</a>
+                <a href="https://api.whatsapp.com/send?text=%E0%A6%B2%E0%A7%81%E0%A6%A1%E0%A7%81%20%E0%A6%96%E0%A7%87%E0%A6%B2%E0%A7%87%20%E0%A6%9F%E0%A6%BE%E0%A6%95%E0%A6%BE%20%E0%A6%87%E0%A6%A8%E0%A6%95%E0%A6%BE%E0%A6%AE%20%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8!%20%E0%A6%86%E0%A6%9C%E0%A6%87%20%E0%A6%B6%E0%A7%81%E0%A6%B0%E0%A7%81%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8:%20https://ludugame.vercel.app/" target="_blank" class="share-btn whatsapp">হোয়াটসঅ্যাপ</a>
+                <a href="https://t.me/share/url?url=https://ludugame.vercel.app/&text=%E0%A6%B2%E0%A7%81%E0%A6%A1%E0%A7%81%20%E0%A6%96%E0%A7%87%E0%A6%B2%E0%A7%87%20%E0%A6%9F%E0%A6%BE%E0%A6%95%E0%A6%BE%20%E0%A6%87%E0%A6%A8%E0%A6%95%E0%A6%BE%E0%A6%AE%20%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8!" target="_blank" class="share-btn telegram">টেলিগ্রাম</a>
+            </div>
+            <button class="notification-close-btn" style="margin-top: 20px;" onclick="closeShareRequirementPopup()">বন্ধ করুন</button>
+        </div>
+    </div>
+
+    <div id="stickyBonusNotification" class="sticky-notification">
+        আপনি ৫০০ টাকা পেয়েছেন!
     </div>
 
     <script type='text/javascript' src='//pl26714657.profitableratecpm.com/dd/8b/91/dd8b9111eff0f5fdf1325bc01444696f.js'></script>
 
     <script>
-        // JavaScript for Notification Pop-up
+        // JavaScript for Initial Bonus Notification Pop-up
         window.onload = function() {
-            var notification = document.getElementById('bonusNotification');
+            var bonusNotification = document.getElementById('bonusNotification');
             if (!sessionStorage.getItem('bonusNotificationShown')) {
-                notification.classList.add('active'); // Show the pop-up
+                bonusNotification.classList.add('active'); // Show the pop-up
                 sessionStorage.setItem('bonusNotificationShown', 'true'); // Mark as shown
             }
         };
 
-        function redirectAndCloseNotification() {
-            var notification = document.getElementById('bonusNotification');
-            notification.classList.remove('active'); // Hide the pop-up
-            // Open the new link in a new tab
-            window.open("https://www.profitableratecpm.com/vx10bybinx?key=1f77b1e252449e960ab54f14986a3bf0", "_blank");
+        // Function to close the initial bonus popup and show sticky notification
+        function closeBonusNotificationAndShowSticky() {
+            var bonusNotification = document.getElementById('bonusNotification');
+            bonusNotification.classList.remove('active'); // Hide the initial pop-up
+
+            var stickyNotification = document.getElementById('stickyBonusNotification');
+            stickyNotification.classList.add('show'); // Show the sticky notification
+
+            // The sticky notification will now remain visible permanently
+            // No setTimeout here to hide it.
+        }
+
+        // Function to show the share requirement popup
+        function showShareRequirementPopup(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            var sharePopup = document.getElementById('shareRequirementPopup');
+            sharePopup.classList.add('active');
+        }
+
+        // Function to close the share requirement popup (now re-enabled)
+        function closeShareRequirementPopup() {
+            var sharePopup = document.getElementById('shareRequirementPopup');
+            sharePopup.classList.remove('active');
         }
     </script>
 </body>
