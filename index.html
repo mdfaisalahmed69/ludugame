@@ -1,352 +1,114 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>লুডু খেলুন, প্রতিদিন পকেট ভরুন!</title>
-    <style>
-        /* Basic Mobile-First Styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-            line-height: 1.6;
-            position: relative; /* Needed for absolute positioning of popups */
-            min-height: 100vh; /* Ensure body takes full viewport height */
-        }
-        .container {
-            width: 100%;
-            max-width: 480px; /* Typical mobile width */
-            margin: 0 auto;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            padding: 20px;
-            box-sizing: border-box; /* Include padding in width calculation */
-        }
-        h1, h2, h3 {
-            color: #2c3e50;
-            text-align: center;
-        }
-        h1 {
-            font-size: 1.8em;
-            margin-bottom: 10px;
-        }
-        h2 {
-            font-size: 1.5em;
-            margin-top: 30px;
-        }
-        p {
-            margin-bottom: 10px;
-        }
-        .section {
-            margin-bottom: 30px;
-        }
-        .header-image {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin: 15px 0 25px 0; /* Space around the image */
-            border-radius: 8px; /* Slightly rounded corners for the image */
-        }
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            height: 0;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-        .button {
-            display: block;
-            width: 90%;
-            margin: 20px auto;
-            padding: 15px;
-            text-align: center;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 1.2em;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-
-        .review {
-            background-color: #e9e9e9;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-style: italic;
-        }
-        .review strong {
-            display: block;
-            margin-top: 5px;
-            font-style: normal;
-            text-align: right;
-            color: #555;
-        }
-
-        /* Styles for ALL Notification Pop-ups */
-        .notification-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; /* Ensure it's on top of everything */
-            visibility: hidden; /* Hidden by default */
-            opacity: 0; /* Hidden by default */
-            transition: visibility 0s, opacity 0.5s linear;
-        }
-        .notification-overlay.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        .notification-box {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            max-width: 300px; /* Adjust for mobile */
-            width: 90%;
-            position: relative;
-        }
-        .notification-box h3 {
-            color: #FF5722; /* A warm bonus color */
-            font-size: 1.5em;
-            margin-bottom: 15px;
-        }
-        .notification-box p {
-            font-size: 1.1em;
-            margin-bottom: 20px;
-        }
-        .notification-close-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            margin: 5px; /* Added margin for potential multiple buttons if needed */
-        }
-        .notification-close-btn:hover {
-            background-color: #45a049;
-        }
-        /* Style for share buttons within the pop-up */
-        .popup-share-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px; /* Space between share buttons */
-            margin-top: 20px;
-            flex-wrap: wrap; /* Allow wrapping on small screens */
-        }
-        .popup-share-buttons .share-btn {
-            display: inline-block;
-            padding: 10px 15px;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            font-size: 0.9em; /* Smaller font for pop-up buttons */
-        }
-        .popup-share-buttons .share-btn.facebook { background-color: #3b5998; }
-        .popup-share-buttons .share-btn.whatsapp { background-color: #25D366; }
-        .popup-share-buttons .share-btn.telegram { background-color: #0088cc; }
-        .popup-share-buttons .share-btn:hover {
-            opacity: 0.9;
-        }
-
-        /* Small sticky notification */
-        .sticky-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #28a745; /* Green for success */
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-            font-size: 0.9em;
-        }
-        .sticky-notification.show {
-            opacity: 1;
-            visibility: visible;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iPhone 16 Pro Max</title>
+<style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 20px; }
+    .container { max-width: 1100px; margin: auto; background: #fff; border-radius: 10px; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .main-img { width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; }
+    .main-img img { width: 100%; height: auto; display: block; }
+    .thumbs { display: flex; gap: 10px; margin-top: 10px; }
+    .thumbs img { width: 70px; height: 70px; object-fit: cover; border: 2px solid transparent; border-radius: 6px; cursor: pointer; }
+    .thumbs img.active { border-color: #ff7a00; }
+    h1 { margin: 0; }
+    .price { font-size: 22px; font-weight: bold; margin: 10px 0; }
+    .oldprice { text-decoration: line-through; color: #777; margin-left: 10px; }
+    .badge { background: #e6fff5; color: #017a4b; padding: 5px 8px; border-radius: 5px; font-size: 14px; font-weight: bold; margin-left: 10px; }
+    .options { margin: 15px 0; }
+    .option-title { font-weight: bold; margin-bottom: 5px; }
+    .option-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+    .option-buttons button { padding: 8px 15px; border: 1px solid #ddd; border-radius: 20px; background: #fff; cursor: pointer; font-weight: bold; }
+    .option-buttons button.selected { border-color: #ff7a00; box-shadow: 0 2px 6px rgba(255,122,0,0.3); }
+    .actions { display: flex; gap: 10px; margin-top: 20px; }
+    .btn { padding: 12px 20px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; text-decoration: none; font-weight: bold; display: inline-block; }
+    .btn.buy { background: #ff7a00; color: #fff; }
+    .btn.cart { background: #fff; border: 1px solid #ddd; color: #000; }
+    .btn.compare { background: #fff; border: 1px dashed #aaa; color: #333; }
+    @media(max-width: 768px) { .container { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
-    <div class="container">
-        <header class="section">
-            <h1>🎲 লুডু খেলুন, প্রতিদিন পকেট ভরুন! 💰</h1>
-            <p style="text-align: center; font-size: 1.1em;">লুডু খেলা এখন আর শুধু সময় কাটানোর জন্য নয়, আপনার মেধা দিয়ে প্রতিদিন আয় করার এক সহজ উপায়। আজই শুরু করুন আপনার লুডু ইনকামের যাত্রা!</p>
-            <img src="https://i.postimg.cc/DzF7ZRk6/Insant-Withdrawls-3-768x661.png" alt="Ludo Game for Income" class="header-image">
-        </header>
 
-        <section class="section">
-            <h2>ভিডিও টিউটোরিয়াল: কিভাবে লুডু খেলে ইনকাম করবেন?</h2>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/YOUR_YOUTUBE_VIDEO_ID?autoplay=1&mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div>
-            <p style="text-align: center; font-size: 0.9em; color: #555;">ভিডিওটি দেখে লুডু খেলে টাকা আয়ের বিস্তারিত নিয়মাবলী জেনে নিন!</p>
-        </section>
-
-        <section class="section">
-            <h2>খেলার নিয়মাবলী</h2>
-            <ul>
-                <li><strong>১. কিভাবে শুরু করবেন:</strong> প্রথমে আমাদের প্ল্যাটফর্মে যুক্ত হোন।</li>
-                <li><strong>২. খেলার পদ্ধতি:</strong> আপনার পছন্দসই রুম বা প্রতিপক্ষ নির্বাচন করুন। লুডুর নিয়ম অনুযায়ী ডাইস রোল করুন এবং ছক পূরণ করুন।</li>
-                <li><strong>৩. পয়েন্ট ও বিজয়:</strong> প্রতিপক্ষকে হারিয়ে পয়েন্ট অর্জন করুন। নির্দিষ্ট পয়েন্টে পৌঁছালে আপনি বিজয়ী হবেন।
-                <li><strong>৪. টাকা উত্তোলন:</strong> আপনার অর্জিত টাকা সহজে আপনার বিকাশ/নগদ/রকেট অ্যাকাউন্টে ট্রান্সফার করতে পারবেন।</li>
-            </ul>
-        </section>
-
-        <section class="section">
-            <h2>🎁 বন্ধুদের আমন্ত্রণ জানান, ১০০ টাকা বোনাস পান!</h2>
-            <p style="text-align: center;">আপনার ১০ জন বন্ধুকে আমাদের ওয়েবসাইট বা অ্যাপ শেয়ার করুন এবং যখন তারা রেজিস্টার করে খেলবে, আপনি সঙ্গে সঙ্গে ১০০ টাকা বোনাস পাবেন!</p>
-        </section>
-
-        <section class="section">
-            <a href="#" onclick="showShareRequirementPopup(event)" class="button">খেলা শুরু করুন</a>
-            <p style="text-align: center; font-weight: bold; margin-top: 15px;">বন্ধুদের সাথে শেয়ার করে আরও বেশি টাকা ইনকাম করুন!</p>
-            </section>
-
-        <section class="section">
-            <h2>🏆 আমাদের ইউজারদের সফলতার গল্প</h2>
-            <div class="review">
-                <p>"আমি এই গেমটা খেলেছি এবং সত্যিই ১০,০০০ টাকা পেয়েছি! অবিশ্বাস্য!"</p>
-                <strong>- রানা আহমেদ</strong>
-            </div>
-            <div class="review">
-                <p>"প্রথমে বিশ্বাস করিনি, কিন্তু এখন আমি প্রতিদিন এখান থেকে টাকা আয় করছি। দারুণ সুযোগ!"</p>
-                <strong>- ফারজানা বেগম</strong>
-            </div>
-            <div class="review">
-                <p>"সহজেই লুডু খেলে টাকা ইনকাম করার সেরা প্ল্যাটফর্ম। আমি খুবই খুশি।"</p>
-                <strong>- আলিফ হোসেন</strong>
-            </div>
-            <div class="review">
-                <p>"আমার অবসর সময় এখন ইনকামের সময়! লুডু খেলে যে এত টাকা কামানো যায়, ভাবতেই পারিনি।"</p>
-                <strong>- শাকিলা সুলতানা</strong>
-            </div>
-            <div class="review">
-                <p>"খুবই ইউজার-ফ্রেন্ডলি ইন্টারফেস, এবং পেমেন্ট দ্রুত পাই। অসাধারণ!"</p>
-                <strong>- ইমতিয়াজ হোসেন</strong>
-            </div>
-             <div class="review">
-                <p>"শুরুতে একটু দ্বিধা ছিল, কিন্তু এখন প্রতিদিন লুডু খেলে ভালো একটা অ্যামাউন্ট আয় করছি। ধন্যবাদ!"</p>
-                <strong>- নুসরাত জাহান</strong>
-            </div>
-            <div class="review">
-                <p>"সেরা লুডু ইনকাম প্ল্যাটফর্ম! আমি বন্ধুদেরও রেফার করেছি, বোনাসও পেয়েছি."</p>
-                <strong>- তানভীর আহমেদ</strong>
-            </div>
-            <div class="review">
-                <p>"সপ্তাহে ২-৩ হাজার টাকা আয় করাটা খুবই সহজ হয়ে গেছে এই প্ল্যাটফর্মের জন্য।"</p>
-                <strong>- জারা ইসলাম</strong>
-            </div>
-            <div class="review">
-                <p>"আমি একজন স্টুডেন্ট, আমার হাত খরচের টাকা এখন লুডু খেলেই উঠে যায়।"</p>
-                <strong>- সিফাত হোসেন</strong>
-            </div>
-            <div class="review">
-                <p>"আমার মা-ও এখন লুডু খেলে অবসর সময়ে কিছু টাকা ইনকাম করছেন। দারুণ একটা আইডিয়া!"</p>
-                <strong>- মীম আক্তার</strong>
-            </div>
-        </section>
-
-        <footer style="text-align: center; font-size: 0.8em; color: #777; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-            <p>© ২০২৫ লুডু আর্নিং। সমস্ত অধিকার সংরক্ষিত।</p>
-        </footer>
-    </div>
-
-    <div id="bonusNotification" class="notification-overlay">
-        <div class="notification-box">
-            <h3>অভিনন্দন!</h3>
-            <p>আপনি সাইট ভিজিট করার জন্য <strong>৫০০ টাকা বোনাস</strong> পেয়েছেন!</p>
-            <button class="notification-close-btn" onclick="closeBonusNotificationAndShowSticky()">ঠিক আছে</button>
+<div class="container">
+    <!-- Left -->
+    <div>
+        <div class="main-img"><img id="mainImage" src="https://i.postimg.cc/mZMycMCS/Screenshot-3.png"></div>
+        <div class="thumbs">
+            <img src="https://i.postimg.cc/mZMycMCS/Screenshot-3.png" class="active" onclick="changeImage(this)">
+            <img src="https://i.postimg.cc/vTWrpFbK/Screenshot-4.png" onclick="changeImage(this)">
+            <img src="https://i.postimg.cc/vTR7qHF9/Screenshot-5.png" onclick="changeImage(this)">
         </div>
     </div>
 
-    <div id="shareRequirementPopup" class="notification-overlay">
-        <div class="notification-box">
-            <h3>গুরুত্বপূর্ণ!</h3>
-            <p>খেলা শুরু করার আগে, অনুগ্রহ করে <strong>১০ জন বন্ধুকে</strong> এই সাইটটি শেয়ার করুন।</p>
-            <p style="font-weight: bold; color: #FF5722;">শেয়ার করার পরেই আপনি খেলা শুরু করতে এবং টাকা উত্তোলন করতে পারবেন।</p>
-            <div class="popup-share-buttons">
-                <a href="https://www.facebook.com/sharer/sharer.php?u=https://ludugame.vercel.app/" target="_blank" class="share-btn facebook">ফেসবুক</a>
-                <a href="https://api.whatsapp.com/send?text=%E0%A6%B2%E0%A7%81%E0%A6%A1%E0%A7%81%20%E0%A6%96%E0%A7%87%E0%A6%B2%E0%A7%87%20%E0%A6%9F%E0%A6%BE%E0%A6%95%E0%A6%BE%20%E0%A6%87%E0%A6%A8%E0%A6%95%E0%A6%BE%E0%A6%AE%20%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8!%20%E0%A6%86%E0%A6%9C%E0%A6%87%20%E0%A6%B6%E0%A7%81%E0%A6%B0%E0%A7%81%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8:%20https://ludugame.vercel.app/" target="_blank" class="share-btn whatsapp">হোয়াটসঅ্যাপ</a>
-                <a href="https://t.me/share/url?url=https://ludugame.vercel.app/&text=%E0%A6%B2%E0%A7%81%E0%A6%A1%E0%A7%81%20%E0%A6%96%E0%A7%87%E0%A6%B2%E0%A7%87%20%E0%A6%9F%E0%A6%BE%E0%A6%95%E0%A6%BE%20%E0%A6%87%E0%A6%A8%E0%A6%95%E0%A6%BE%E0%A6%AE%20%E0%A6%95%E0%A6%B0%E0%A7%81%E0%A6%A8!" target="_blank" class="share-btn telegram">টেলিগ্রাম</a>
+    <!-- Right -->
+    <div>
+        <h1>iPhone 16 Pro Max</h1>
+        <div class="price">
+            ৳150,000 
+            <span class="badge">19% OFF</span> 
+            <span class="oldprice">৳185,000</span>
+        </div>
+        <div style="color:#10b981; font-weight:bold;">In Stock</div>
+
+        <!-- Color Option -->
+        <div class="options">
+            <div class="option-title">Color:</div>
+            <div class="option-buttons">
+                <button onclick="selectOption(this)" class="selected">Natural</button>
+                <button onclick="selectOption(this)">Blue</button>
+                <button onclick="selectOption(this)">Black</button>
             </div>
-            <button class="notification-close-btn" style="margin-top: 20px;" onclick="window.location.href = 'https://www.profitableratecpm.com/n54s8b537?key=345fefef5fe3dd4ffee392578c55afd3';">বন্ধ করুন</button>
+        </div>
+
+        <!-- Storage Option -->
+        <div class="options">
+            <div class="option-title">Storage:</div>
+            <div class="option-buttons">
+                <button onclick="selectOption(this)" class="selected">128GB</button>
+                <button onclick="selectOption(this)">256GB</button>
+                <button onclick="selectOption(this)">512GB</button>
+            </div>
+        </div>
+
+        <!-- Region Option -->
+        <div class="options">
+            <div class="option-title">Region:</div>
+            <div class="option-buttons">
+                <button onclick="selectOption(this)" class="selected">BD</button>
+                <button onclick="selectOption(this)">UAE</button>
+                <button onclick="selectOption(this)">USA</button>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="actions">
+            <a href="https://www.profitableratecpm.com/z4t4rru3?key=50a5fd9700bf269cd4712e491c6b92d2" target="_blank" class="btn buy">BUY NOW</a>
+            <a href="https://www.profitableratecpm.com/z4t4rru3?key=50a5fd9700bf269cd4712e491c6b92d2" target="_blank" class="btn cart">Add to Cart</a>
+            <a href="https://www.profitableratecpm.com/z4t4rru3?key=50a5fd9700bf269cd4712e491c6b92d2" target="_blank" class="btn compare">Compare</a>
         </div>
     </div>
+</div>
 
-    <div id="stickyBonusNotification" class="sticky-notification">
-        আপনি ৫০০ টাকা পেয়েছেন!
-    </div>
+<script>
+function changeImage(img) {
+    document.getElementById("mainImage").src = img.src;
+    document.querySelectorAll(".thumbs img").forEach(t => t.classList.remove("active"));
+    img.classList.add("active");
+}
+function selectOption(btn) {
+    let group = btn.parentNode;
+    group.querySelectorAll("button").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+}
+</script>
 
-    <script type='text/javascript' src='//pl26714657.profitableratecpm.com/dd/8b/91/dd8b9111eff0f5fdf1325bc01444696f.js'></script>
+<!-- Popunder Ads -->
+<script type='text/javascript' src='//pl26622972.profitableratecpm.com/8f/10/d1/8f10d1b213e016e5fd18612c088e58f6.js'></script>
 
-    <script>
-        // JavaScript for Initial Bonus Notification Pop-up
-        window.onload = function() {
-            var bonusNotification = document.getElementById('bonusNotification');
-            if (!sessionStorage.getItem('bonusNotificationShown')) {
-                bonusNotification.classList.add('active'); // Show the pop-up
-                sessionStorage.setItem('bonusNotificationShown', 'true'); // Mark as shown
-            }
-        };
+<!-- Social Bar Ads -->
+<script type='text/javascript' src='//pl26714657.profitableratecpm.com/dd/8b/91/dd8b9111eff0f5fdf1325bc01444696f.js'></script>
 
-        // Function to close the initial bonus popup and show sticky notification
-        function closeBonusNotificationAndShowSticky() {
-            var bonusNotification = document.getElementById('bonusNotification');
-            bonusNotification.classList.remove('active'); // Hide the initial pop-up
-
-            var stickyNotification = document.getElementById('stickyBonusNotification');
-            stickyNotification.classList.add('show'); // Show the sticky notification
-
-            // The sticky notification will now remain visible permanently
-            // No setTimeout here to hide it.
-        }
-
-        // Function to show the share requirement popup
-        function showShareRequirementPopup(event) {
-            event.preventDefault(); // Prevent the default link behavior
-            var sharePopup = document.getElementById('shareRequirementPopup');
-            sharePopup.classList.add('active');
-        }
-
-        // The closeShareRequirementPopup function is no longer needed as the button redirects.
-        // function closeShareRequirementPopup() {
-        //     var sharePopup = document.getElementById('shareRequirementPopup');
-        //     sharePopup.classList.remove('active');
-        // }
-    </script>
 </body>
 </html>
